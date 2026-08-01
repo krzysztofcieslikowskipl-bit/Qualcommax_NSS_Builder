@@ -1,0 +1,18 @@
+#!/bin/sh
+
+mkdir -p /overlay/nlbwmon
+chmod 750 /overlay/nlbwmon
+
+if uci -q get nlbwmon.@nlbwmon[0] >/dev/null; then
+        uci -q set nlbwmon.@nlbwmon[0].database_directory='/overlay/nlbwmon'
+
+        uci -q delete nlbwmon.@nlbwmon[0].local_network
+        uci -q add_list nlbwmon.@nlbwmon[0].local_network='192.168.1.0/24'
+
+        uci -q commit nlbwmon
+fi
+
+chmod +x /etc/init.d/nlbwmon-netlink-fix
+/etc/init.d/nlbwmon-netlink-fix enable
+
+exit 0
