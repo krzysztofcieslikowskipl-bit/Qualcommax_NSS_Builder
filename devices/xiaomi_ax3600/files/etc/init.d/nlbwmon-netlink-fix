@@ -1,0 +1,27 @@
+#!/bin/sh /etc/rc.common
+
+START=99
+STOP=01
+
+start() {
+        logger -t nlbwmon-netlink-fix "Waiting for NSS/ECM initialization"
+
+        sleep 10
+
+        /etc/init.d/nlbwmon stop
+
+        if rmmod nf_conntrack_netlink 2>/dev/null; then
+                logger -t nlbwmon-netlink-fix "Unloaded nf_conntrack_netlink"
+        else
+                logger -t nlbwmon-netlink-fix "Module was not loaded or could not be unloaded"
+        fi
+
+        if modprobe nf_conntrack_netlink; then
+                logger -t nlbwmon-netlink-fix "Loaded nf_conntrack_netlink"
+        else
+                logger -t nlbwmon-netlink-fix "Failed to load nf_conntrack_netlink"
+        fi
+
+        /etc/init.d/nlbwmon start
+        logger -t nlbwmon-netlink-fix "Restarted nlbwmon"
+}
