@@ -7,7 +7,7 @@ if uci -q get nlbwmon.@nlbwmon[0] >/dev/null; then
         uci -q set nlbwmon.@nlbwmon[0].database_directory='/overlay/nlbwmon'
 
         uci -q delete nlbwmon.@nlbwmon[0].local_network
-        uci -q add_list nlbwmon.@nlbwmon[0].local_network='192.168.1.0/24'
+        uci -q add_list nlbwmon.@nlbwmon[0].local_network='lan'
 
         uci -q commit nlbwmon
 fi
